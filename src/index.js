@@ -2,6 +2,10 @@ const { exec } = require("child_process");
 let app = require('./app');
 let portsApp = require('./portsApp');
 
+const firstArg = process.argv[2];
+const shouldListen = firstArg && firstArg.startsWith('listen')
+const shouldServe = !firstArg || !firstArg.endsWith('only')
+
 const port = app.get('port');
 const delay = 500;
 let triesRemaining = 2;
@@ -34,14 +38,17 @@ const tryToListen = ()=> {
 };
 
 // try once
-tryToListen();
-// try other times (currently 1, irrespective of triesRemaining)
-nextTry = setTimeout (()=>{ nextTry=null; tryToListen(); });
+if (shouldServe) {
+  tryToListen();
+  // try other times (currently 1, irrespective of triesRemaining)
+  nextTry = setTimeout (()=>{ nextTry=null; tryToListen(); });
+}
 
-[7881, 6881, 6889, 10001].forEach( port=>{
-  portsApp(port).listen(port, () => {
-    console.log('basic responder running on port', port);
-  });
-})
+if (shouldListen)
+  [7881, 6881, 6889, 10001].forEach( port=>{
+    portsApp(port).listen(port, () => {
+      console.log('basic responder running on port', port);
+    });
+  })
 
 process.on('SIGHUP', () => { console.log("Bye bye!"); process.exit(); })

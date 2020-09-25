@@ -21,8 +21,11 @@
     "nodemon": "^1.18.4"
   },
   "scripts": {
-    "start": "nodemon  --signal SIGHUP src/index.js",
-    "noexpress": "nodemon  --signal SIGHUP src/expressless-proxy.js",
+    "start": "node src/index.js",
+    "local": "node listen",
+    "remote": "node listenonly",
+    "dev": "nodemon --signal SIGHUP src/index.js listen",
+    "dev-listenonly": "nodemon  --signal SIGHUP src/index.js listenonly",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
